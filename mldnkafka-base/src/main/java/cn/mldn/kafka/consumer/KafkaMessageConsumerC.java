@@ -12,10 +12,10 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-public class KafkaMessageConsumerA {
+public class KafkaMessageConsumerC {
 	public static final String TOPIC_NAME = "mldn-1" ;	// 主题
 	public static final String SERVERS = "kafka-single:9095" ;	// 主机列表
-	public static final String GROUP = "group-1" ;	// 主机列表
+	public static final String GROUP = "group-3" ;	// 主机列表
 	public static final int POLL_TIMEOUT = 1000 ; 
 	
 	public static void main(String[] args) throws Exception {
@@ -33,7 +33,7 @@ public class KafkaMessageConsumerA {
 			// Kafka采用的是批量消费处理， 所以此时返回的是一组消费内容
 			ConsumerRecords<Integer, String> records = consumer.poll(POLL_TIMEOUT) ;
 			for (ConsumerRecord<Integer, String> record : records) {
-				System.out.println("【消费端 - A】offset = " + record.offset() + "、key = " + record.key() + "、value = " + record.value());
+				System.out.println("【消费端 - C】offset = " + record.offset() + "、key = " + record.key() + "、value = " + record.value());
 			}
 		}
 		consumer.close(); 
