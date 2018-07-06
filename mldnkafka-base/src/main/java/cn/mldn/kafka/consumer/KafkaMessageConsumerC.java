@@ -14,7 +14,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 public class KafkaMessageConsumerC {
 	public static final String TOPIC_NAME = "mldn-1" ;	// 主题
-	public static final String SERVERS = "kafka-single:9095" ;	// 主机列表
+	public static final String SERVERS = "kafka-single:9092" ;	// 主机列表
 	public static final String GROUP = "group-3" ;	// 主机列表
 	public static final int POLL_TIMEOUT = 1000 ; 
 	
