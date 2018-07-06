@@ -15,8 +15,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 public class KafkaMessageConsumerA {
 	public static final String TOPIC_NAME = "mldn-topic" ;	// 主题
-	public static final String SERVERS = "kafka-single:9095" ;	// 主机列表
-	public static final String GROUP = "group-1" ;	// 主机列表
+	public static final String SERVERS = "kafka-cluster-a:9095,kafka-cluster-b:9095,kafka-cluster-c:9095" ;	// 主机列表
+	public static final String GROUP = "group-3" ;	// 主机列表
 	public static final int POLL_TIMEOUT = 1000 ;  
 	static {
 		System.setProperty("java.security.auth.login.config",

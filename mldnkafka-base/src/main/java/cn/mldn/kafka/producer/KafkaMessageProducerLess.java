@@ -1,6 +1,7 @@
 package cn.mldn.kafka.producer;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -13,7 +14,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 // 本次消息发送的key类型为Integer、消息value类型为String
 public class KafkaMessageProducerLess {
 	public static final String TOPIC_NAME = "mldn-topic" ;	// 主题 
-	public static final String SERVERS = "kafka-single:9095" ;	// 主机列表
+	public static final String SERVERS = "kafka-cluster-a:9095,kafka-cluster-b:9095,kafka-cluster-c:9095" ;	// 主机列表
 	static {
 		System.setProperty("java.security.auth.login.config",
 				"d:/kafka/kafka_client_jaas.conf"); 
@@ -28,7 +29,8 @@ public class KafkaMessageProducerLess {
 		props.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
 		long start = System.currentTimeMillis() ;	// 发送的开始时间
 		Producer<Integer, String> producer = new KafkaProducer<>(props) ;// 发送对象
-		for (int x = 0 ; x < 3 ; x ++) {	// 要发送很多的消息
+		for (int x = 0 ; x < Integer.MAX_VALUE ; x ++) {	// 要发送很多的消息
+			TimeUnit.SECONDS.sleep(1);
 			producer.send(new ProducerRecord<Integer, String>(TOPIC_NAME, x, 
 					"【" + Thread.currentThread().getName() + "】mldnjava - " + x));
 		} 

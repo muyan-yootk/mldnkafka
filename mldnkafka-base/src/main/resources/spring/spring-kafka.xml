@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<context:component-scan base-package="cn.mldn"/>
+	<context:property-placeholder
+		location="classpath:config/*.properties" />
+	<!--5、 SpringKakfa提供有一个消息的处理模版支持类，直接使用此类即可 -->
+	<bean id="kafkaTemplate" class="org.springframework.kafka.core.KafkaTemplate">
+		<constructor-arg ref="producerFactory"/>	<!-- 设置连接的消息组件服务工厂 -->
+		<property name="defaultTopic" value="${kafka.topic}"/>
+	</bean>
+	<!-- 3、定义一个消息监听容器类，这个容器类将融合其余的两项配置内容 -->	
+	<bean id="messageListenerContainer" class="org.springframework.kafka.listener.KafkaMessageListenerContainer">
+		<constructor-arg index="0" ref="consumerFactory"/>
+		<constructor-arg index="1" ref="containerProperties"/>
+	</bean> 
+	<!-- 4、定义消费者的容器类 -->
+	<bean id="containerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
+		<constructor-arg value="${kafka.topic}"/>	<!-- 定义消费的消息主题 -->
+		<property name="messageListener">	<!-- 定义消息监听处理类 -->
+			<bean class="cn.mldn.listener.MessageConsumer"/>
+		</property>
+	</bean>
+	<!-- 2、建立消费者的连接工厂类，此时要使用的是反序列化配置 -->
+	<bean id="consumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+		<constructor-arg>
+			<map>	<!-- 将Kafka所有核心的配置项都设置到了消费的连接工厂类之中 -->
+				<entry key="sasl.mechanism" value="${kafka.sasl.mechanism}"/>
+				<entry key="security.protocol" value="${kafka.security.protocol}"/>
+				<entry key="bootstrap.servers" value="${kafka.bootstrap.servers}"/>
+				<entry key="key.deserializer" value="${kafka.key.deserializer}"/>
+				<entry key="value.deserializer" value="${kafka.value.deserializer}"/>
+				<entry key="group.id" value="${kafka.group.id}"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	<!-- 1、建立消息生产者的Kafka工厂类，消息生产者需要序列化配置 -->
+	<bean id="producerFactory" class="org.springframework.kafka.core.DefaultKafkaProducerFactory">
+		<constructor-arg>
+			<map>	<!-- 将Kafka所有核心的配置项都设置到了消费的连接工厂类之中 -->
+				<entry key="sasl.mechanism" value="${kafka.sasl.mechanism}"/>
+				<entry key="security.protocol" value="${kafka.security.protocol}"/>
+				<entry key="bootstrap.servers" value="${kafka.bootstrap.servers}"/>
+				<entry key="key.serializer" value="${kafka.key.serializer}"/>
+				<entry key="value.serializer" value="${kafka.value.serializer}"/>
+			</map>
+		</constructor-arg>
+	</bean> 
+	
+</beans>
